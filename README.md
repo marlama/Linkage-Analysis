@@ -1,4 +1,4 @@
-# Linkage-Disequilibrium
+# Linkage Analysis
 Pipeline for quality Control and auxiliary scripts to run Linkage analysis in families using Merlin software (http://csg.sph.umich.edu/abecasis/Merlin/tour/input_files.html). 
 
 # Control Quality
