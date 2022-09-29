@@ -62,3 +62,28 @@ for fam in 1 2 3 ; do for chr in (1..22) ; do plink --bfile Family${fam}_NoMonom
 for fam in 1 2 3 ; do for chr in (1..22) ; do plink --bfile Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr} --cm-map /MapaGenetico/genetic_map_GRCh38_chr${chr}_combined_Header.txt ${chr} --make-bed --out Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map ; done ; done
 
 # Linkage Analysis
+
+## Make Inputs Merlin
+for fam in 1 2 3 ; do for chr in {1..22} ; do plink --bfile Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map --recode --out Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map ; done ; done
+
+### .dat
+for fam in 1 2 3 ; do for chr in {1..22} ; do awk '{print "M""\t"$2}'	 Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map.map > Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map.dat ; done ; done  
+
+for fam in 1 2 3 ; do for chr in {1..22} ; do cat Header.dat Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map.dat > Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map_H.dat ; done ; done
+
+### .map
+for fam in 1 2 3 ; do  for chr in {1..22} ; do awk '{print $1"\t"$2"\t"$3}' Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map.map > Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map_merlin.map ; done ; done
+
+### .ped
+Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map.ped
+
+## Run pedstat
+for fam in 1 2 3 ; do for chr in 22 ;  do merlin-1.1.2/executables/pedstats -d Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map_H.dat -p Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map.ped ; done ; done
+
+## Merlin 
+Linkage analysis tests for co-segregation of a chromosomal region and a trait locus of interest. In parametric linkage analysis, a specific disease model is used to describe segregation of the trait locus.
+
+https://csg.sph.umich.edu/abecasis/merlin/tour/parametric.html
+
+for fam in 1 2 3 ; do for chr in  {1..22} ;  do merlin-1.1.2/executables/merlin -d Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map_H.dat -p Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map.ped -m Family${fam}_NoMonomorphic_NoLDRegions_LD0.1_GenoMind_Eur_chr${chr}_map_merlin.map --model parametric.model --information --pdf --prefix Family${fam}_chr${chr}_ParametricModel_LDEUR ; done ; done
+
